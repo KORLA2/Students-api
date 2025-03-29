@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"myproj/bash"
+	"myapp/bash"
 )
 
 func main() {
-
 	fmt.Println(bash.Greet("Goutham"))
-	fmt.Print(bash.Pack("Akhil"))
 
 }
