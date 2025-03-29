@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"myapp/bash"
+
+	"github.com/KORLA2/Go/bash"
 )
 
 func main() {
