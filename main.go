@@ -1,8 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"myapp/student"
+	"net/http"
+)
+
+// "github.com/go-playground/validator/v10"
 
 func main() {
 
-	fmt.Println("Building Students Api in Go lang")
+	mux := http.NewServeMux()
+	mux.HandleFunc("POST /api/student", student.New())
+
+	// if err := validator.New().Struct(URL); err != nil {
+
+	// 	response.ValidationError(err.(validator.ValidationErrors))
+
+	// }
+
+	http.ListenAndServe(":8080", mux)
+
 }
