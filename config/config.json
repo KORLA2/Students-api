@@ -1,0 +1,8 @@
+{
+
+    "env":"dev",
+    "storagepath":"Database/database.db",
+    "httpserver":{
+        "address": "localhost:8082"
+    }
+}
