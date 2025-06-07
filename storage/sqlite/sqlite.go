@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"myapp/config"
 
+	"myapp/student/Type"
+
 	_ "modernc.org/sqlite"
 )
 
@@ -44,12 +46,12 @@ func (s *Sqlite) CreateStudent(name string, age int, email string) (int64, error
 	//    s.Db.Prepare("I")
 
 	stmt, err := s.Db.Prepare("Insert into Student(Name,Age,Email) values(?,?,?)")
-
 	if err != nil {
 
 		fmt.Println("Error creating Statement for inserting Student")
 		return 0, err
 	}
+	defer stmt.Close()
 	Result, err := stmt.Exec(name, age, email)
 
 	if err != nil {
@@ -60,5 +62,27 @@ func (s *Sqlite) CreateStudent(name string, age int, email string) (int64, error
 	lastid, _ := Result.LastInsertId()
 
 	return lastid, nil
+
+}
+
+func (s *Sqlite) GetStudent(id int64) (Type.Student, error) {
+
+	stmt, err := s.Db.Prepare("Select * from Student where ID =? ")
+
+	if err != nil {
+		fmt.Println("Error creating a statement for getting student")
+	}
+
+	defer stmt.Close()
+	var studentdata = Type.Student{}
+	err = stmt.QueryRow(id).Scan(&studentdata.Id, &studentdata.Name, &studentdata.Age, &studentdata.Email)
+	// Result,err:=stmt.Exec(id)
+
+	if err != nil {
+
+		return studentdata, fmt.Errorf("error executing the select querry for the given id,%d", id)
+
+	}
+	return studentdata, nil
 
 }

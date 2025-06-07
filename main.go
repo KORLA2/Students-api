@@ -24,6 +24,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/student", student.New(db))
+	mux.HandleFunc("GET /api/student/{id}", student.GetStudent(db))
 
 	server := &http.Server{
 		Addr:    cfg.Address,

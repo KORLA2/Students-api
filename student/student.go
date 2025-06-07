@@ -6,23 +6,18 @@ import (
 	"log/slog"
 	"myapp/response"
 	"myapp/storage"
+	"myapp/student/Type"
 	"net/http"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 )
-
-type Student struct {
-	Id    int
-	Name  string `json:"name" validate:"required"`
-	Email string `json:"email" validate:"required"`
-	Age   int    `json:"age" validate:"required"`
-}
 
 func New(s storage.Storage) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		var student Student
+		var student Type.Student
 		err := json.NewDecoder(r.Body).Decode(&student)
 		if err != nil {
 
@@ -42,6 +37,27 @@ func New(s storage.Storage) http.HandlerFunc {
 
 		student.Id = int(lastid)
 		response.WriteJson(w, http.StatusCreated, student)
+
+	}
+
+}
+
+func GetStudent(s storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		id := r.PathValue("id")
+
+		slog.Info("Getting Student with ID  give me a moment...", slog.String("ID", id))
+		Id, _ := strconv.Atoi(id)
+		studentdata, err := s.GetStudent(int64(Id))
+
+		if err != nil {
+			slog.Error("Error fecthing student", slog.String("ID", id))
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+		slog.Info("Successfully fecthed Student", slog.String("ID", id))
+		response.WriteJson(w, http.StatusAccepted, studentdata)
 
 	}
 
