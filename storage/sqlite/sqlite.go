@@ -115,3 +115,21 @@ func (s *Sqlite) ListAllStudents() ([]Type.Student, error) {
 	}
 	return students, nil
 }
+
+func (s *Sqlite) UpdateStudent(id int64, name string, age int, email string) (int64, error) {
+
+	stmt, err := s.Db.Prepare("Update Student set Name =? ,Age=?,Email=? where Id=?")
+	if err != nil {
+		return 0, fmt.Errorf("error preparing statement for updating student with id %d", id)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(name, age, email, id)
+
+	if err != nil {
+		return 0, fmt.Errorf("error executing update query for student with id %d", id)
+	}
+
+	return id, nil
+
+}

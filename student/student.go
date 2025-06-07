@@ -78,3 +78,25 @@ func ListAllStudents(s storage.Storage) http.HandlerFunc {
 		response.WriteJson(w, http.StatusOK, students)
 	}
 }
+
+func UpdateStudent(s storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		var student Type.Student
+		json.NewDecoder(r.Body).Decode(&student)
+
+		id := r.PathValue("id")
+		Id, _ := strconv.Atoi(id)
+
+		_, err := s.UpdateStudent(int64(Id), student.Name, student.Age, student.Email)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+		student.Id = Id
+		slog.Info("Successfully Updated the Student who has", slog.String("Id", id))
+		response.WriteJson(w, http.StatusOK, student)
+
+	}
+
+}
