@@ -62,3 +62,19 @@ func GetStudent(s storage.Storage) http.HandlerFunc {
 	}
 
 }
+
+func ListAllStudents(s storage.Storage) http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		slog.Info("LIsting All th students in the database")
+		students, err := s.ListAllStudents()
+
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+		slog.Info("Successfully Listed all the students from Database")
+		response.WriteJson(w, http.StatusOK, students)
+	}
+}
