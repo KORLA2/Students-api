@@ -27,7 +27,7 @@ func main() {
 	mux.HandleFunc("GET /api/student/{id}", student.GetStudent(db))
 	mux.HandleFunc("GET /api/student/list", student.ListAllStudents(db))
 	mux.HandleFunc("PUT /api/student/{id}", student.UpdateStudent(db))
-	// mux.HandleFunc("DELETE /api/student/{id}", student.DeleteStudent(db))
+	mux.HandleFunc("DELETE /api/student/{id}", student.DeleteStudent(db))
 
 	server := &http.Server{
 		Addr:    cfg.Address,
